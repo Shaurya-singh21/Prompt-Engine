@@ -11,7 +11,7 @@ import {
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from "@/components/lightswind/dropdown-menu";
+} from "@/components/lightswind/dropdown-menu.tsx";
 import { Info, LogIn, LogOut, Pencil, TextAlignJustify } from "lucide-react";
 function Nav() {
   const router = useRouter();
