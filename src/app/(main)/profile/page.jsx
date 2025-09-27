@@ -20,7 +20,7 @@ function Profile_page() {
   const [np, setnp] = useState(0);
   //getting DATA ++++++
   const getData = async () => {
-    setLoading(true)
+    setLoading(true);
     const res = await fetch("/api/profile", {
       method: "GET",
     });
@@ -31,6 +31,7 @@ function Profile_page() {
       setnp(item.user.totalPrompts);
       setLoading(false);
     }
+   
   };
 
   //delete data +++++++++++++++
@@ -76,12 +77,11 @@ function Profile_page() {
   if (loading) {
     return <Loader />;
   }
- 
+
   if (!profile) {
     return <h1>No data</h1>;
   }
   return (
-    
     <>
       {copyAlert && (
         <Alert showAlert={copyAlert} desc={"Prompt Copied SUCCESSFULLY!"} />
@@ -116,7 +116,9 @@ function Profile_page() {
               <h2 className="text-2xl font-bold text-white mb-1">
                 {profile.user.username}
               </h2>
-              <p className="text-slate-400 text-md mb-4">{profile.user.email}</p>
+              <p className="text-slate-400 text-md mb-4">
+                {profile.user.email}
+              </p>
             </div>
 
             {/* Stats Section */}

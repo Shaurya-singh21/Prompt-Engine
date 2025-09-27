@@ -44,7 +44,7 @@ export default function AuthPage() {
                     }}
                     className="w-full text-lg flex items-center justify-center px-4 py-2 border border-gray-300 rounded-2xl shadow-sm bg-white cursor-pointer font-medium text-slate-900 hover:bg-gray-200/80 focus:outline-none ">
                     <Image
-                      src={`/${provider.id}.png`}
+                      src={`/Google.png`}
                       alt="Google logo"
                       width={20}
                       height={20}
