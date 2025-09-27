@@ -65,9 +65,7 @@ export async function GET(req, res) {
                     score: { $meta: 'searchScore' },
                 },
             },
-            {
-                $limit: 20, // Add pagination later if needed
-            },
+            
         ];
         const results = await message_model.aggregate(pipeline);
         
