@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import Feed_loader from "./Feed_load";
-import { Clipboard, ClipboardList } from "lucide-react";
+import { Clipboard, ClipboardList, Star } from "lucide-react";
 import Alert from "./Alert";
 function Feed() {
   const [loading, setLoading] = useState(false);
@@ -37,6 +37,7 @@ function Feed() {
       setCopyAlert(false);
     }, 1000);
   };
+
   return (
     <>
       <Alert showAlert={copyAlert} desc={"Prompt Copied SUCCESSFULLY!"} />
@@ -57,11 +58,10 @@ function Feed() {
           />
           <button
             type="button"
-            onClick ={(e) => {
+            onClick={(e) => {
               handleSubmit(e, searchTerm);
               setLoading(true);
             }}
-            
             className="px-3 hover:from-green-500 hover:via-cyan-600 hover:to-blue-600 bg-gradient-to-r from-green-400 via-cyan-500 to-blue-500    duration-150 hover:scale-105 transition cursor-pointer sm:py-2 py-1  bg-cyan-800   font-semibold text-white rounded-xl">
             Search
           </button>
@@ -74,18 +74,19 @@ function Feed() {
         ) : Post === null ? (
           <h1 className="text-3xl mt-15 font-semibold">No Result Found</h1>
         ) : (
-          <ol className="grid lg:grid-cols-2 gap-2 lg:w-full my-20 lg:px-5 px-10">
+          <ol className="grid lg:grid-cols-2 gap-2 lg:w-full  my-20 lg:px-5 px-10">
             {Post.map((p) => {
               return (
                 <li
                   key={p._id}
-                  className="border-1 text-2xl border-gray-800  h-[300px]  m-4 px-4 py-2 flex flex-col items-center bg-slate-900/90 rounded-2xl">
+                  className="border-1 text-2xl border-gray-800  h-fit  m-4 px-4 py-2 flex flex-col items-center bg-slate-900/90 rounded-2xl">
                   <h1 className=" font-semibold">{p.title}</h1>
                   <h1 className="text-xl mt-1">{p.Cemail}</h1>
                   <span className="flex flex-col text-xl h-[70%] mt-2 w-full items-start justify-between">
                     <textarea
                       defaultValue={p.message}
                       readOnly
+                      rows={4}
                       id={p._id}
                       className="pr-3  outline-none rounded-md text-gray-400 font-semibold h-full  py-1  w-full"></textarea>
                     <div className="flex items-center justify-between w-full">
@@ -100,12 +101,14 @@ function Feed() {
                           );
                         })}
                       </div>
-                      <ClipboardList
-                        className="cursor-pointer mt-2 w-8 h-8"
-                        onClick={() => {
-                          copyMesaage(p._id);
-                        }}
-                      />
+                      <span className="flex items-center gap-x-3">
+                        <ClipboardList
+                          className="cursor-pointer mt-2 w-8 h-8"
+                          onClick={() => {
+                            copyMesaage(p._id);
+                          }}
+                        />
+                      </span>
                     </div>
                   </span>
                 </li>

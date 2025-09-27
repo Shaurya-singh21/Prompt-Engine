@@ -10,53 +10,54 @@ export async function GET(req, res) {
     if (!searchTerm) {
         return new Response(JSON.stringify("need a search term"), { status: 400 })
     }
-    if(searchTerm.charAt(0) === '#'){
+    if (searchTerm.charAt(0) === '#') {
         searchTerm.slice(1);
     }
     try {
-       await DBconnect();
-         
+        await DBconnect();
+
         const pipeline = [
             {
                 $search: {
                     index: 'Prompt_Search',
                     compound: {
-                        must: [
+    
+                        should: [
                             {
-                                // Main text search with typo tolerance
+                                
                                 text: {
                                     query: searchTerm,
-                                    path: ['title', 'message','tag', 'Cemail'],
+                                    path: ['message', 'title'],
                                     fuzzy: {
-                                        maxEdits: 2, // Allows for 1 typo
-                                        prefixLength: 1,
+                                        maxEdits: 2, // Allow for typos
+                                        prefixLength: 2,
                                     },
                                 },
                             },
                             {
-                                // Exact match for tags and email
+                                
                                 text: {
                                     query: searchTerm,
-                                    path: ['tag', 'Cemail'],
+                                    path: ['tag', 'Cemail', 'title'],
+                                    score: { boost: { value: 3 } } // Triple the relevance score for matches here.
                                 },
                             },
-                        ],
-                        must: [
                             {
-                                text: {
-                                    query: searchTerm,
-                                    path: ['title', 'tag'],
-                                    score: { boost: { value: 3 } },
-                                      fuzzy: { maxEdits: 1 }  // Triple the relevance score
-                                },
-                            },
+                                
+                                wildcard: {
+                                    query: `${searchTerm}*`,
+                                    path: ['title', 'message', 'tag'],
+                                    allowAnalyzedField: true
+                                }
+                            }
                         ],
+                        
                     },
                 },
             },
             {
                 $project: {
-                    _id: 1,
+                    _id: 0,
                     title: 1,
                     message: 1,
                     tag: 1,
@@ -65,17 +66,17 @@ export async function GET(req, res) {
                     score: { $meta: 'searchScore' },
                 },
             },
-            
+
         ];
         const results = await message_model.aggregate(pipeline);
-        
-        if(results.length === 0){
+
+        if (results.length === 0) {
             return new Response(JSON.stringify("NO RESULTS FOUND"), { status: 404 })
         }
-        return new Response(JSON.stringify({final:results}), { status: 200 });
+        return new Response(JSON.stringify({ final: results }), { status: 200 });
 
     } catch (err) {
-       
+       console.log(err)
         return new Response(JSON.stringify({ message: err.message }), { status: 500 })
     }
 }

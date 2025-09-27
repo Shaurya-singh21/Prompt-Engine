@@ -1,3 +1,4 @@
+
 import mongoose from 'mongoose';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/[...nextauth]/route';
@@ -49,4 +50,3 @@ export const DELETE = async (req, { params }) => {
       session.endSession();
    }
 };
-

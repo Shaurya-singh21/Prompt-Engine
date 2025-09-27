@@ -1,13 +1,22 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-import { FileText, Calendar, Trash2, LogOut, Files } from "lucide-react";
+import {
+  FileText,
+  Calendar,
+  Trash2,
+  LogOut,
+  Files,
+  Star,
+  ChevronRight,
+} from "lucide-react";
 
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
 import Loader from "@/components/Loading";
 import Alert from "@/components/Alert";
 import { useRouter } from "next/navigation";
+import { get } from "mongoose";
 
 function Profile_page() {
   let { data: session, status } = useSession();
@@ -18,6 +27,8 @@ function Profile_page() {
   const [copyAlert, setCopyAlert] = useState(false);
   const [delAlert, setDelAlert] = useState(false);
   const [np, setnp] = useState(0);
+  const [level, setLevel] = useState(null);
+
   //getting DATA ++++++
   const getData = async () => {
     setLoading(true);
@@ -29,11 +40,30 @@ function Profile_page() {
       setData(item);
       setPrompts(item.user.prompts);
       setnp(item.user.totalPrompts);
+      getLevel(item.user.totalPrompts);
       setLoading(false);
     }
-   
   };
-
+  const getLevel = async (np) => {
+    switch (true) {
+      case np <= 5:
+        setLevel("Noob 😂 no. of prompts badhao bhai");
+        break;
+      case np >= 6 && np <= 15:
+        setLevel("Aura++ 😈 Aura farming raa");
+        break;
+      case np >= 16 && np <= 30:
+        setLevel("Legend 💀 Lage raho jawaan ");
+        break;
+      case np >= 31 && np <= 50:
+        setLevel("Hacker 😅 Hacker Bolte!");
+        break;
+      case np >= 51:
+        setLevel("God 🤲 Allah u Akbar");
+      default:
+        break;
+    }
+  };
   //delete data +++++++++++++++
   const deletePrompt = async (id) => {
     const res = await fetch(`/api/profile/${id}`, {
@@ -144,7 +174,17 @@ function Profile_page() {
                   {profile.user.memberSince}
                 </p>
               </div>
-
+              <div className="bg-slate-800/40 border border-slate-700/50 rounded-xl p-5">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-1">
+                    <Calendar className="text-cyan-400" size={20} />
+                  </div>
+                  <span className="text-slate-400 text-md">Level</span>
+                </div>
+                <div className="text-3xl font-bold text-start text-white">
+                  {level}
+                </div>
+              </div>
               <button
                 type="button"
                 onClick={() => {
